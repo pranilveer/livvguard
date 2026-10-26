@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-outfit);
+
+  --color-ink: #070812;
+  --color-night: #0b0d1c;
+  --color-panel: #111427;
+  --color-panel-2: #171a33;
+  --color-line: rgb(255 255 255 / 0.08);
+
+  --color-brand: #d72323;
+  --color-brand-600: #b81b1b;
+  --color-brand-soft: #ff7a6e;
+  --color-brand-tint: #ffb3a7;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: var(--color-night);
+  color: #fff;
+}
+
+::selection {
+  background: rgb(215 35 35 / 0.45);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-brand-soft) 0%, var(--color-brand-tint) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at top, black 30%, transparent 75%);
+}
+
+.glow {
+  background: radial-gradient(closest-side, rgb(215 35 35 / 0.35), transparent);
+  filter: blur(40px);
+}
+
+/* Sits above page content but below .above-glow media and the fixed header. */
+.cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.4s;
+  background: radial-gradient(
+    750px at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgb(255 99 88 / 0.26),
+    rgb(215 35 35 / 0.13) 38%,
+    transparent 70%
+  );
+}
+
+.above-glow {
+  position: relative;
+  z-index: 6;
+}
+
+.card-hover {
+  transition:
+    transform 0.18s,
+    border-color 0.18s,
+    background-color 0.18s,
+    box-shadow 0.18s;
+}
+
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: rgb(255 99 88 / 0.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-hover {
+    transition: opacity 0.2s linear;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    transform: translateY(1px);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 0.85;
+  }
+}
+
+.hint-pulse {
+  animation: hint-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+
+.panel-in {
+  animation: panel-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint-pulse,
+  .panel-in {
+    animation: none;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
+/* Content stays visible without JS or in browsers lacking scroll-driven animations. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--reveal-offset, 0) * 1%) entry calc(45% + var(--reveal-offset, 0) * 1%);
+    }
+  }
+}
